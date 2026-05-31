@@ -3,13 +3,13 @@
 const Homey = require('homey');
 const { Client } = require('../../lib/esphome-client');
 
-// Entity object_ids we surface to Homey capabilities.
 const ENV_MAP = {
   bme688_temperature: 'measure_temperature',
   bme688_humidity: 'measure_humidity',
   'ltr390_ambient_light__lux_': 'measure_luminance',
 };
 const PRESENCE_ENTITY = 'any_presence';
+const UPDATE_ENTITY = 'esp32___firmware_update'; // object_id from firmware
 
 class S1ProDevice extends Homey.Device {
   async onInit() {
@@ -17,15 +17,31 @@ class S1ProDevice extends Homey.Device {
 
     this._presenceState = null;
     this._keyToObjectId = new Map();
+    this._updateEntity = null;
     this._reconnectAttempts = 0;
     this._reconnectTimer = null;
     this._destroyed = false;
 
-    for (const cap of ['alarm_motion', 'measure_temperature', 'measure_humidity', 'measure_luminance']) {
+    const caps = ['alarm_motion', 'measure_temperature', 'measure_humidity', 'measure_luminance'];
+    for (const cap of caps) {
       if (!this.hasCapability(cap)) {
         await this.addCapability(cap).catch((e) => this.error(`addCapability ${cap}`, e));
       }
     }
+
+    // Flow action: install firmware update
+    this.homey.flow.getActionCard('install_firmware_update')
+      .registerRunListener(async () => {
+        if (!this._updateEntity) throw new Error('Update entity not available');
+        this._updateEntity.install();
+      });
+
+    // Flow action: check for firmware update
+    this.homey.flow.getActionCard('check_firmware_update')
+      .registerRunListener(async () => {
+        if (!this._updateEntity) throw new Error('Update entity not available');
+        this._updateEntity.check();
+      });
 
     await this._connect();
   }
@@ -90,6 +106,13 @@ class S1ProDevice extends Homey.Device {
     if (!objectId || key == null) return;
     this._keyToObjectId.set(key, objectId);
 
+    if (entity.type === 'Update') {
+      this._updateEntity = entity;
+      entity.on('state', (state) => this._onUpdateState(state));
+      this.log('Update entity found:', cfg.name);
+      return;
+    }
+
     if (typeof entity.on === 'function') {
       entity.on('state', (state) => this._onState(objectId, state));
     }
@@ -115,6 +138,21 @@ class S1ProDevice extends Homey.Device {
         this.error(`setCapabilityValue ${cap}`, e && e.message ? e.message : e),
       );
     }
+  }
+
+  _onUpdateState(state) {
+    if (!state) return;
+    const current = state.getCurrentVersion ? state.getCurrentVersion() : state.currentVersion;
+    const latest = state.getLatestVersion ? state.getLatestVersion() : state.latestVersion;
+    const inProgress = state.getInProgress ? state.getInProgress() : state.inProgress;
+    const hasUpdate = latest && current && latest !== current && !inProgress;
+
+    this.log(`Firmware: current=${current} latest=${latest} updateAvailable=${hasUpdate}`);
+
+    this.setSettings({
+      firmware_current: current || '',
+      firmware_latest: latest || '',
+    }).catch(() => {});
   }
 
   _scheduleReconnect() {

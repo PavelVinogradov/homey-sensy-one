@@ -58,10 +58,42 @@
           "type": "password",
           "label": { "en": "API password (optional)" },
           "value": ""
+        },
+        {
+          "id": "firmware_current",
+          "type": "label",
+          "label": { "en": "Current firmware version" },
+          "value": ""
+        },
+        {
+          "id": "firmware_latest",
+          "type": "label",
+          "label": { "en": "Latest firmware version" },
+          "value": ""
         }
       ]
     }
   ],
+  "flow": {
+    "actions": [
+      {
+        "id": "install_firmware_update",
+        "title": { "en": "Install firmware update" },
+        "hint": { "en": "Triggers OTA firmware install on the S1 Pro sensor." },
+        "args": [
+          { "type": "device", "name": "device", "filter": "driver_id=s1-pro" }
+        ]
+      },
+      {
+        "id": "check_firmware_update",
+        "title": { "en": "Check for firmware update" },
+        "hint": { "en": "Asks the S1 Pro to check for a new firmware version." },
+        "args": [
+          { "type": "device", "name": "device", "filter": "driver_id=s1-pro" }
+        ]
+      }
+    ]
+  },
   "discovery": {
     "esphome-s1pro": {
       "type": "mdns-sd",
