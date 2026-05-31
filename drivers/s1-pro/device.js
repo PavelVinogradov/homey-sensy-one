@@ -1,7 +1,7 @@
 'use strict';
 
 const Homey = require('homey');
-const { Client } = require('@2colors/esphome-native-api');
+const { Client } = require('../../lib/esphome-client');
 
 // Entity object_ids we surface to Homey capabilities.
 const ENV_MAP = {
