@@ -142,17 +142,11 @@ class S1ProDevice extends Homey.Device {
 
   _onUpdateState(state) {
     if (!state) return;
-    const current = state.getCurrentVersion ? state.getCurrentVersion() : state.currentVersion;
-    const latest = state.getLatestVersion ? state.getLatestVersion() : state.latestVersion;
-    const inProgress = state.getInProgress ? state.getInProgress() : state.inProgress;
-    const hasUpdate = latest && current && latest !== current && !inProgress;
-
+    const current = state.currentVersion || '';
+    const latest = state.latestVersion || '';
+    const hasUpdate = latest && current && latest !== current && !state.inProgress;
     this.log(`Firmware: current=${current} latest=${latest} updateAvailable=${hasUpdate}`);
-
-    this.setSettings({
-      firmware_current: current || '',
-      firmware_latest: latest || '',
-    }).catch(() => {});
+    this.setSettings({ firmware_current: current, firmware_latest: latest }).catch(() => {});
   }
 
   _scheduleReconnect() {
