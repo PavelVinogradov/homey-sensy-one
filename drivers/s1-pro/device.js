@@ -7,6 +7,7 @@ const ENV_MAP = {
   bme688_temperature: 'measure_temperature',
   bme688_humidity: 'measure_humidity',
   'ltr390_ambient_light__lux_': 'measure_luminance',
+  all_targets_count: 'measure_target_count',
 };
 const PRESENCE_ENTITY = 'any_presence';
 const UPDATE_ENTITY = 'esp32___firmware_update'; // object_id from firmware
@@ -22,7 +23,7 @@ class S1ProDevice extends Homey.Device {
     this._reconnectTimer = null;
     this._destroyed = false;
 
-    const caps = ['alarm_motion', 'measure_temperature', 'measure_humidity', 'measure_luminance'];
+    const caps = ['alarm_motion', 'measure_temperature', 'measure_humidity', 'measure_luminance', 'measure_target_count'];
     for (const cap of caps) {
       if (!this.hasCapability(cap)) {
         await this.addCapability(cap).catch((e) => this.error(`addCapability ${cap}`, e));

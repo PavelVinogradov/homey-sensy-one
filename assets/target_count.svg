@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+  <circle cx="8" cy="5" r="2.5" fill="currentColor"/>
+  <path d="M8 9c-2.5 0-4 1.5-4 3v2h8v-2c0-1.5-1.5-3-4-3z" fill="currentColor"/>
+  <circle cx="16" cy="5" r="2.5" fill="currentColor"/>
+  <path d="M16 9c-2.5 0-4 1.5-4 3v2h8v-2c0-1.5-1.5-3-4-3z" fill="currentColor"/>
+  <text x="12" y="23" text-anchor="middle" font-size="5" fill="currentColor">targets</text>
+</svg>

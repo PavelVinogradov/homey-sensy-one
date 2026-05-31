@@ -25,7 +25,8 @@
         "alarm_motion",
         "measure_temperature",
         "measure_humidity",
-        "measure_luminance"
+        "measure_luminance",
+        "measure_target_count"
       ],
       "platforms": ["local"],
       "connectivity": ["lan"],
@@ -74,6 +75,22 @@
       ]
     }
   ],
+  "capabilities": {
+    "measure_target_count": {
+      "type": "number",
+      "title": { "en": "Detected targets" },
+      "units": { "en": "targets" },
+      "icon": "assets/target_count.svg",
+      "min": 0,
+      "max": 3,
+      "step": 1,
+      "decimals": 0,
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "uiQuickAction": false
+    }
+  },
   "flow": {
     "actions": [
       {
