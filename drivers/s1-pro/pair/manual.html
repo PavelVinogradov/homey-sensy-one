@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><title>Add S1 Pro manually</title></head>
+<body>
+  <header class="homey-header">
+    <h1 class="homey-title">Add S1 Pro by IP</h1>
+    <p class="homey-subtitle">Use this if mDNS discovery did not find your device.</p>
+  </header>
+
+  <fieldset class="homey-form-fieldset">
+    <div class="homey-form-group">
+      <label class="homey-form-label" for="host">IP address or hostname</label>
+      <input class="homey-form-input" id="host" type="text" placeholder="192.168.1.42" />
+    </div>
+    <div class="homey-form-group">
+      <label class="homey-form-label" for="port">Native API port</label>
+      <input class="homey-form-input" id="port" type="number" value="6053" />
+    </div>
+    <div class="homey-form-group">
+      <label class="homey-form-label" for="password">API password (optional)</label>
+      <input class="homey-form-input" id="password" type="password" />
+    </div>
+  </fieldset>
+
+  <button class="homey-button-primary-full" id="submit">Add device</button>
+
+  <script>
+    document.getElementById('submit').addEventListener('click', async () => {
+      const host = document.getElementById('host').value.trim();
+      const port = Number(document.getElementById('port').value) || 6053;
+      const password = document.getElementById('password').value || '';
+      if (!host) return Homey.alert('Host required');
+      try {
+        const device = await Homey.emit('manual_add', { host, port, password });
+        await Homey.createDevice(device);
+        Homey.done();
+      } catch (e) {
+        Homey.alert(e.message || String(e));
+      }
+    });
+  </script>
+</body>
+</html>

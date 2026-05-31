@@ -1,0 +1,7 @@
+{
+  "settings": {
+    "host": "IP address / hostname",
+    "port": "Native API port",
+    "password": "API password (optional)"
+  }
+}

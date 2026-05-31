@@ -1,0 +1,50 @@
+diff --git a/node_modules/@2colors/esphome-native-api/lib/utils/frameHelper.js b/node_modules/@2colors/esphome-native-api/lib/utils/frameHelper.js
+index f0ff260..62480bb 100644
+--- a/node_modules/@2colors/esphome-native-api/lib/utils/frameHelper.js
++++ b/node_modules/@2colors/esphome-native-api/lib/utils/frameHelper.js
+@@ -42,14 +42,14 @@ class FrameHelper extends EventEmitter {
+     }
+ 
+     buildMessage(messageId, bytes) {
++        if (id_to_type[messageId] === undefined) {
++            // Unknown future message type — skip silently, keep connection alive
++            return undefined;
++        }
+         try {
+             return pb[id_to_type[messageId]].deserializeBinary(bytes);
+         } catch(e) {
+             this.emit('error', new Error(`Failed find or parsed message type for Id: ${messageId}`));
+-            if (typeof id_to_type[messageId] !== undefined) {
+-                // we know this type and close connect mb error or freeze connect
+-                this.end();
+-            }
+         }
+     }
+ 
+diff --git a/node_modules/@2colors/esphome-native-api/lib/utils/plaintextFrameHelper.js b/node_modules/@2colors/esphome-native-api/lib/utils/plaintextFrameHelper.js
+index 8bb8dfe..e4c5e10 100644
+--- a/node_modules/@2colors/esphome-native-api/lib/utils/plaintextFrameHelper.js
++++ b/node_modules/@2colors/esphome-native-api/lib/utils/plaintextFrameHelper.js
+@@ -43,6 +43,13 @@ class PlaintextFrameHelper extends FrameHelper {
+             return null;
+ 
+         const message = this.buildMessage(messageId, buffer.subarray(offset, messageLength + offset));
++        if (message === undefined) {
++            // Unknown message type — consume bytes and continue without emitting
++            const skip = Object.create(null);
++            skip.__skip = true;
++            skip.length = messageLength + offset;
++            return skip;
++        }
+         message.length = messageLength + offset;
+         return message;
+     }
+@@ -54,7 +61,7 @@ class PlaintextFrameHelper extends FrameHelper {
+         try {
+             while ((message = this.deserialize(this.buffer))) {
+                 this.buffer = this.buffer.slice(message.length);
+-                this.emit("message", message);
++                if (!message.__skip) this.emit("message", message);
+             }
+         } catch (e) {
+             this.emit("error", e);

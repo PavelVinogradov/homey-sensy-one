@@ -1,0 +1,80 @@
+{
+  "id": "com.sensyone.s1pro",
+  "version": "0.1.0",
+  "compatibility": ">=5.0.0",
+  "sdk": 3,
+  "platforms": ["local"],
+  "name": { "en": "Sensy One" },
+  "description": {
+    "en": "Sensy-One S1 Pro Multi Sense presence and environmental sensor (ESPHome)."
+  },
+  "category": ["climate"],
+  "brandColor": "#5cd6c0",
+  "permissions": [],
+  "images": {
+    "small": "/assets/images/small.png",
+    "large": "/assets/images/large.png"
+  },
+  "author": { "name": "void", "email": "void@nixdev.net" },
+  "drivers": [
+    {
+      "id": "s1-pro",
+      "name": { "en": "S1 Pro Multi Sense" },
+      "class": "sensor",
+      "capabilities": [
+        "alarm_motion",
+        "measure_temperature",
+        "measure_humidity",
+        "measure_luminance"
+      ],
+      "platforms": ["local"],
+      "connectivity": ["lan"],
+      "discovery": "esphome-s1pro",
+      "images": {
+        "small": "/drivers/s1-pro/assets/images/small.png",
+        "large": "/drivers/s1-pro/assets/images/large.png"
+      },
+      "pair": [
+        { "id": "start" },
+        { "id": "list_devices", "template": "list_devices", "navigation": { "next": "add_devices" } },
+        { "id": "manual", "navigation": { "next": "add_devices" } },
+        { "id": "add_devices", "template": "add_devices" }
+      ],
+      "settings": [
+        {
+          "id": "host",
+          "type": "text",
+          "label": { "en": "IP address / hostname" },
+          "value": ""
+        },
+        {
+          "id": "port",
+          "type": "number",
+          "label": { "en": "Native API port" },
+          "value": 6053
+        },
+        {
+          "id": "password",
+          "type": "password",
+          "label": { "en": "API password (optional)" },
+          "value": ""
+        }
+      ]
+    }
+  ],
+  "discovery": {
+    "esphome-s1pro": {
+      "type": "mdns-sd",
+      "mdns-sd": { "name": "esphomelib", "protocol": "tcp" },
+      "id": "{{txt.mac}}",
+      "conditions": [
+        [
+          {
+            "field": "txt.project_name",
+            "match": { "type": "string", "value": "Sensy-One.S1 Pro Multi Sense" }
+          }
+        ]
+      ]
+    }
+  }
+}
