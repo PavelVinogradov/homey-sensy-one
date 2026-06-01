@@ -94,7 +94,6 @@
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/homey-settings@latest/dist/homey-settings.js"></script>
 <script>
 (()=>{
   const X_MIN=-520,X_MAX=520,Y_MIN=0,Y_MAX=600,WORLD_W=X_MAX-X_MIN,WORLD_H=Y_MAX-Y_MIN;
@@ -113,24 +112,24 @@
   let cssW=0,cssH=0,es=null,saving=false;
 
   // ── Homey integration ─────────────────────────────────────────────────────
-  if(typeof Homey!=='undefined'){
-    Homey.ready(()=>{
-      Homey.api('GET','/devices',null,(err,devices)=>{
-        if(err||!devices||!devices.length) return;
-        devices.forEach(d=>{
-          const opt=document.createElement('option');
-          opt.value=d.ip; opt.textContent=d.name;
-          deviceSel.insertBefore(opt,deviceSel.lastElementChild);
-        });
-        if(devices.length===1){
-          deviceSel.value=devices[0].ip;
-          hostEl.value=devices[0].ip;
-          manualRow.style.display='none';
-          connect();
-        }
+  // Homey global is always injected into the settings iframe.
+  // Must call Homey.ready() or the loading spinner never dismisses.
+  Homey.ready(()=>{
+    Homey.api('GET','/devices',null,(err,devices)=>{
+      if(err||!devices||!devices.length) return;
+      devices.forEach(d=>{
+        const opt=document.createElement('option');
+        opt.value=d.ip; opt.textContent=d.name;
+        deviceSel.insertBefore(opt,deviceSel.lastElementChild);
       });
+      if(devices.length===1){
+        deviceSel.value=devices[0].ip;
+        hostEl.value=devices[0].ip;
+        manualRow.style.display='none';
+        connect();
+      }
     });
-  }
+  });
 
   deviceSel.addEventListener('change',()=>{
     const v=deviceSel.value;
