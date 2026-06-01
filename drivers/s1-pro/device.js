@@ -11,6 +11,20 @@ const ENV_MAP = {
 };
 const PRESENCE_ENTITY = 'any_presence';
 const LED_ENTITY = 'ws2812___led';
+const BUZZER_ENTITY = 'mlt8530___buzzer';
+const BUZZER_PITCH_ENTITY = 'mlt8530_buzzer_pitch';
+const BUZZER_VOLUME_ENTITY = 'mlt8530_buzzer_volume';
+
+// Signal definitions: array of [pitchHz, volumeFraction, durationMs, pauseAfterMs]
+const SIGNALS = {
+  short_beep:  [[2700, 0.8,  80, 0]],
+  double_beep: [[2700, 0.8,  80, 100], [2700, 0.8, 80, 0]],
+  triple_beep: [[2700, 0.8,  80, 100], [2700, 0.8, 80, 100], [2700, 0.8, 80, 0]],
+  long_beep:   [[2700, 0.8, 600, 0]],
+  alert:       [[3200, 1.0,  60,  60], [3200, 1.0,  60,  60], [3200, 1.0,  60,  60], [3200, 1.0, 60, 0]],
+  success:     [[2000, 0.7, 120, 80],  [2700, 0.7, 120, 80],  [3500, 0.9, 200, 0]],
+  warning:     [[3500, 0.9, 150, 80],  [2700, 0.7, 150, 80],  [1800, 0.6, 250, 0]],
+};
 
 // Convert Homey hue (0-1) + saturation (0-1) + brightness (0-1) → RGB (0-1 each)
 function hsvToRgb(h, s, v) {
@@ -56,6 +70,9 @@ class S1ProDevice extends Homey.Device {
     this._keyToObjectId = new Map();
     this._updateEntity = null;
     this._ledEntity = null;
+    this._buzzerEntity = null;
+    this._buzzerPitchEntity = null;
+    this._buzzerVolumeEntity = null;
     this._reconnectAttempts = 0;
     this._reconnectTimer = null;
     this._destroyed = false;
@@ -103,6 +120,12 @@ class S1ProDevice extends Homey.Device {
     this.registerCapabilityListener('dim', (value) => this._ledSetBrightness(value));
     this.registerCapabilityListener('light_hue', (value) => this._ledSetColor({ hue: value }));
     this.registerCapabilityListener('light_saturation', (value) => this._ledSetColor({ saturation: value }));
+
+    // Flow action: buzzer signal
+    this.homey.flow.getActionCard('play_sound_signal')
+      .registerRunListener(async ({ device, signal }) => {
+        await device._playSignal(signal);
+      });
 
     // Flow action: LED off
     this.homey.flow.getActionCard('led_turn_off')
@@ -245,6 +268,21 @@ class S1ProDevice extends Homey.Device {
       return;
     }
 
+    if (entity.type === 'Switch' && objectId === BUZZER_ENTITY) {
+      this._buzzerEntity = entity;
+      return;
+    }
+
+    if (entity.type === 'Number' && objectId === BUZZER_PITCH_ENTITY) {
+      this._buzzerPitchEntity = entity;
+      return;
+    }
+
+    if (entity.type === 'Number' && objectId === BUZZER_VOLUME_ENTITY) {
+      this._buzzerVolumeEntity = entity;
+      return;
+    }
+
     if (typeof entity.on === 'function') {
       entity.on('state', (state) => this._onState(objectId, state));
     }
@@ -289,6 +327,25 @@ class S1ProDevice extends Homey.Device {
     const hasUpdate = latest && current && latest !== current && !state.inProgress;
     this.log(`Firmware: current=${current} latest=${latest} updateAvailable=${hasUpdate}`);
     this.setSettings({ firmware_current: current, firmware_latest: latest }).catch(() => {});
+  }
+
+  // ── Buzzer ────────────────────────────────────────────────────────────────
+
+  async _playSignal(signalId) {
+    const steps = SIGNALS[signalId];
+    if (!steps) throw new Error(`Unknown signal: ${signalId}`);
+    if (!this._buzzerEntity) throw new Error('Buzzer entity not available');
+
+    const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+    for (const [pitch, volume, duration, pause] of steps) {
+      if (this._buzzerPitchEntity) this._buzzerPitchEntity.command({ state: pitch });
+      if (this._buzzerVolumeEntity) this._buzzerVolumeEntity.command({ state: volume });
+      this._buzzerEntity.command({ state: true });
+      await sleep(duration);
+      this._buzzerEntity.command({ state: false });
+      if (pause > 0) await sleep(pause);
+    }
   }
 
   // ── Reconnect ─────────────────────────────────────────────────────────────

@@ -167,6 +167,29 @@
     ],
     "actions": [
       {
+        "id": "play_sound_signal",
+        "title": { "en": "Play sound signal" },
+        "titleFormatted": { "en": "Play sound signal [[signal]]" },
+        "hint": { "en": "Play a predefined buzzer sound pattern on the S1 Pro." },
+        "args": [
+          { "type": "device", "name": "device", "filter": "driver_id=s1-pro" },
+          {
+            "type": "dropdown",
+            "name": "signal",
+            "title": { "en": "Signal" },
+            "values": [
+              { "id": "short_beep",   "label": { "en": "Short beep" } },
+              { "id": "double_beep",  "label": { "en": "Double beep" } },
+              { "id": "triple_beep",  "label": { "en": "Triple beep" } },
+              { "id": "long_beep",    "label": { "en": "Long beep" } },
+              { "id": "alert",        "label": { "en": "Alert (rapid)" } },
+              { "id": "success",      "label": { "en": "Success (rising)" } },
+              { "id": "warning",      "label": { "en": "Warning (descending)" } }
+            ]
+          }
+        ]
+      },
+      {
         "id": "led_turn_off",
         "title": { "en": "Turn off LED" },
         "hint": { "en": "Turns off the WS2812B LED on the S1 Pro." },
