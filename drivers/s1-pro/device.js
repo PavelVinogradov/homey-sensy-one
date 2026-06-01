@@ -61,7 +61,12 @@ class S1ProDevice extends Homey.Device {
     this._destroyed = false;
 
     this._targetCountTrigger = this.homey.flow.getDeviceTriggerCard('target_count_changed');
+    this._targetCountBecameTrigger = this.homey.flow.getDeviceTriggerCard('target_count_became');
     this._targetCountCondition = this.homey.flow.getConditionCard('target_count_condition');
+
+    this._targetCountBecameTrigger.registerRunListener(({ device, count }, state) => {
+      return state.count === count;
+    });
 
     this._targetCountCondition.registerRunListener(({ device, operator, count }) => {
       const current = device._targetCount || 0;
@@ -262,6 +267,9 @@ class S1ProDevice extends Homey.Device {
         this._targetCount = value;
         this._targetCountTrigger.trigger(this, { count: value }).catch((e) =>
           this.error('trigger target_count_changed', e && e.message ? e.message : e),
+        );
+        this._targetCountBecameTrigger.trigger(this, {}, { count: value }).catch((e) =>
+          this.error('trigger target_count_became', e && e.message ? e.message : e),
         );
       }
     }

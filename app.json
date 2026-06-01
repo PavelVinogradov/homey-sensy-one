@@ -117,6 +117,22 @@
             "title": { "en": "Target count" }
           }
         ]
+      },
+      {
+        "id": "target_count_became",
+        "title": { "en": "Number of detected targets became" },
+        "titleFormatted": { "en": "Number of detected targets became [[count]]" },
+        "hint": { "en": "Fires when the number of detected targets changes to a specific value." },
+        "args": [
+          { "type": "device", "name": "device", "filter": "driver_id=s1-pro" },
+          {
+            "type": "number",
+            "name": "count",
+            "title": { "en": "Number of targets" },
+            "min": 0,
+            "max": 3
+          }
+        ]
       }
     ],
     "conditions": [
