@@ -27,6 +27,8 @@
         "measure_humidity",
         "measure_luminance",
         "measure_target_count",
+        "measure_co2",
+        "measure_co2_equivalent",
         "onoff",
         "dim",
         "light_hue",
@@ -86,6 +88,18 @@
     }
   ],
   "capabilities": {
+    "measure_co2_equivalent": {
+      "type": "number",
+      "title": { "en": "CO₂ Equivalent (estimated)" },
+      "units": { "en": "ppm" },
+      "decimals": 0,
+      "min": 0,
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "uiQuickAction": false,
+      "icon": "assets/co2.svg"
+    },
     "measure_target_count": {
       "type": "number",
       "title": { "en": "Detected targets" },

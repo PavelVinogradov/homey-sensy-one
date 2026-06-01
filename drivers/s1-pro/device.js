@@ -8,6 +8,8 @@ const ENV_MAP = {
   bme688_humidity: 'measure_humidity',
   'ltr390_ambient_light__lux_': 'measure_luminance',
   all_targets_count: 'measure_target_count',
+  'scd40_co____concentration': 'measure_co2',
+  'bme688_co____equivalent': 'measure_co2_equivalent',
 };
 const PRESENCE_ENTITY = 'any_presence';
 const LED_ENTITY = 'ws2812___led';
@@ -103,6 +105,8 @@ class S1ProDevice extends Homey.Device {
       'measure_humidity',
       'measure_luminance',
       'measure_target_count',
+      'measure_co2',
+      'measure_co2_equivalent',
       'onoff',
       'dim',
       'light_hue',
