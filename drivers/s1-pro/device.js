@@ -104,6 +104,13 @@ class S1ProDevice extends Homey.Device {
     this.registerCapabilityListener('light_hue', (value) => this._ledSetColor({ hue: value }));
     this.registerCapabilityListener('light_saturation', (value) => this._ledSetColor({ saturation: value }));
 
+    // Flow action: LED off
+    this.homey.flow.getActionCard('led_turn_off')
+      .registerRunListener(async ({ device }) => {
+        device._ledSetOnOff(false);
+        await device.setCapabilityValue('onoff', false).catch(() => {});
+      });
+
     // Flow actions: firmware
     this.homey.flow.getActionCard('install_firmware_update')
       .registerRunListener(async () => {

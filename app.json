@@ -167,6 +167,14 @@
     ],
     "actions": [
       {
+        "id": "led_turn_off",
+        "title": { "en": "Turn off LED" },
+        "hint": { "en": "Turns off the WS2812B LED on the S1 Pro." },
+        "args": [
+          { "type": "device", "name": "device", "filter": "driver_id=s1-pro" }
+        ]
+      },
+      {
         "id": "install_firmware_update",
         "title": { "en": "Install firmware update" },
         "hint": { "en": "Triggers OTA firmware install on the S1 Pro sensor." },
