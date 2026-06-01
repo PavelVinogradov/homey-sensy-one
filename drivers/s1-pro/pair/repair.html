@@ -28,30 +28,36 @@
 
   <script>
     // Pre-fill current settings from device
-    Homey.emit('getSettings', null, (err, settings) => {
-      if (settings) {
+    Homey.emit('getSettings', {}, (err, settings) => {
+      if (!err && settings) {
         if (settings.host) document.getElementById('host').value = settings.host;
         if (settings.port) document.getElementById('port').value = settings.port;
       }
     });
 
-    document.getElementById('submit').addEventListener('click', async () => {
+    document.getElementById('submit').addEventListener('click', () => {
       const host = document.getElementById('host').value.trim();
       const port = Number(document.getElementById('port').value) || 6053;
       const password = document.getElementById('password').value || '';
       const status = document.getElementById('status');
+      const btn = document.getElementById('submit');
 
       if (!host) return Homey.alert('Host required');
 
+      btn.disabled = true;
+      status.style.color = '#888';
       status.textContent = 'Testing connection…';
-      try {
-        await Homey.emit('repair', { host, port, password });
-        status.textContent = 'Connected. Saving…';
-        Homey.done();
-      } catch (e) {
-        status.style.color = '#e74c3c';
-        status.textContent = e.message || String(e);
-      }
+
+      Homey.emit('repair', { host, port, password }, (err) => {
+        if (err) {
+          btn.disabled = false;
+          status.style.color = '#e74c3c';
+          status.textContent = err.message || String(err);
+        } else {
+          status.textContent = 'Connected. Saved.';
+          Homey.done();
+        }
+      });
     });
   </script>
 </body>
