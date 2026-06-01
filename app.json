@@ -1,6 +1,6 @@
 {
   "id": "com.sensyone.s1pro",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "platforms": ["local"],
@@ -26,8 +26,18 @@
         "measure_temperature",
         "measure_humidity",
         "measure_luminance",
-        "measure_target_count"
+        "measure_target_count",
+        "onoff",
+        "dim",
+        "light_hue",
+        "light_saturation",
+        "light_mode"
       ],
+      "capabilitiesOptions": {
+        "onoff": { "title": { "en": "LED" } },
+        "dim": { "title": { "en": "LED Brightness" } },
+        "light_hue": { "title": { "en": "LED Color" } }
+      },
       "platforms": ["local"],
       "connectivity": ["lan"],
       "discovery": "esphome-s1pro",

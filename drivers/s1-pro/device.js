@@ -10,7 +10,42 @@ const ENV_MAP = {
   all_targets_count: 'measure_target_count',
 };
 const PRESENCE_ENTITY = 'any_presence';
-const UPDATE_ENTITY = 'esp32___firmware_update'; // object_id from firmware
+const LED_ENTITY = 'ws2812___led';
+
+// Convert Homey hue (0-1) + saturation (0-1) + brightness (0-1) → RGB (0-1 each)
+function hsvToRgb(h, s, v) {
+  const i = Math.floor(h * 6);
+  const f = h * 6 - i;
+  const p = v * (1 - s);
+  const q = v * (1 - f * s);
+  const t = v * (1 - (1 - f) * s);
+  switch (i % 6) {
+    case 0: return [v, t, p];
+    case 1: return [q, v, p];
+    case 2: return [p, v, t];
+    case 3: return [p, q, v];
+    case 4: return [t, p, v];
+    case 5: return [v, p, q];
+  }
+}
+
+// Convert RGB (0-1) → Homey hue (0-1), saturation (0-1)
+function rgbToHsv(r, g, b) {
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  const d = max - min;
+  const s = max === 0 ? 0 : d / max;
+  let h = 0;
+  if (d !== 0) {
+    switch (max) {
+      case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+      case g: h = (b - r) / d + 2; break;
+      case b: h = (r - g) / d + 4; break;
+    }
+    h /= 6;
+  }
+  return { h, s, v: max };
+}
 
 class S1ProDevice extends Homey.Device {
   async onInit() {
@@ -19,25 +54,42 @@ class S1ProDevice extends Homey.Device {
     this._presenceState = null;
     this._keyToObjectId = new Map();
     this._updateEntity = null;
+    this._ledEntity = null;
     this._reconnectAttempts = 0;
     this._reconnectTimer = null;
     this._destroyed = false;
 
-    const caps = ['alarm_motion', 'measure_temperature', 'measure_humidity', 'measure_luminance', 'measure_target_count'];
+    const caps = [
+      'alarm_motion',
+      'measure_temperature',
+      'measure_humidity',
+      'measure_luminance',
+      'measure_target_count',
+      'onoff',
+      'dim',
+      'light_hue',
+      'light_saturation',
+      'light_mode',
+    ];
     for (const cap of caps) {
       if (!this.hasCapability(cap)) {
         await this.addCapability(cap).catch((e) => this.error(`addCapability ${cap}`, e));
       }
     }
 
-    // Flow action: install firmware update
+    // LED capability listeners
+    this.registerCapabilityListener('onoff', (value) => this._ledSetOnOff(value));
+    this.registerCapabilityListener('dim', (value) => this._ledSetBrightness(value));
+    this.registerCapabilityListener('light_hue', (value) => this._ledSetColor({ hue: value }));
+    this.registerCapabilityListener('light_saturation', (value) => this._ledSetColor({ saturation: value }));
+
+    // Flow actions: firmware
     this.homey.flow.getActionCard('install_firmware_update')
       .registerRunListener(async () => {
         if (!this._updateEntity) throw new Error('Update entity not available');
         this._updateEntity.install();
       });
 
-    // Flow action: check for firmware update
     this.homey.flow.getActionCard('check_firmware_update')
       .registerRunListener(async () => {
         if (!this._updateEntity) throw new Error('Update entity not available');
@@ -46,6 +98,50 @@ class S1ProDevice extends Homey.Device {
 
     await this._connect();
   }
+
+  // ── LED helpers ──────────────────────────────────────────────────────────
+
+  _ledSetOnOff(on) {
+    if (!this._ledEntity) return;
+    this._ledEntity.command({ state: on });
+  }
+
+  _ledSetBrightness(brightness) {
+    if (!this._ledEntity) return;
+    // brightness controls both master brightness and color brightness
+    this._ledEntity.command({ state: true, brightness, colorBrightness: 1 });
+  }
+
+  _ledSetColor({ hue, saturation } = {}) {
+    if (!this._ledEntity) return;
+    const h = hue !== undefined ? hue : this.getCapabilityValue('light_hue') || 0;
+    const s = saturation !== undefined ? saturation : this.getCapabilityValue('light_saturation') || 1;
+    const v = this.getCapabilityValue('dim') || 1;
+    const [r, g, b] = hsvToRgb(h, s, v);
+    this._ledEntity.command({ state: true, red: r, green: g, blue: b, colorBrightness: 1, brightness: v });
+  }
+
+  _onLedState(state) {
+    if (!state) return;
+    // Sync Homey caps from device state
+    const on = state.state === true;
+    this.setCapabilityValue('onoff', on).catch(() => {});
+
+    if (state.brightness != null) {
+      this.setCapabilityValue('dim', state.brightness).catch(() => {});
+    }
+
+    if (state.red != null && state.green != null && state.blue != null) {
+      const { h, s } = rgbToHsv(state.red, state.green, state.blue);
+      this.setCapabilityValue('light_hue', h).catch(() => {});
+      this.setCapabilityValue('light_saturation', s).catch(() => {});
+    }
+
+    // WS2812B is RGB-only, always color mode
+    this.setCapabilityValue('light_mode', 'color').catch(() => {});
+  }
+
+  // ── Connection ───────────────────────────────────────────────────────────
 
   async _connect() {
     if (this._destroyed) return;
@@ -114,6 +210,13 @@ class S1ProDevice extends Homey.Device {
       return;
     }
 
+    if (entity.type === 'Light' && objectId === LED_ENTITY) {
+      this._ledEntity = entity;
+      entity.on('state', (state) => this._onLedState(state));
+      this.log('LED entity found:', cfg.name);
+      return;
+    }
+
     if (typeof entity.on === 'function') {
       entity.on('state', (state) => this._onState(objectId, state));
     }
@@ -149,6 +252,8 @@ class S1ProDevice extends Homey.Device {
     this.log(`Firmware: current=${current} latest=${latest} updateAvailable=${hasUpdate}`);
     this.setSettings({ firmware_current: current, firmware_latest: latest }).catch(() => {});
   }
+
+  // ── Reconnect ─────────────────────────────────────────────────────────────
 
   _scheduleReconnect() {
     if (this._destroyed) return;
