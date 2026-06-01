@@ -102,6 +102,53 @@
     }
   },
   "flow": {
+    "triggers": [
+      {
+        "id": "target_count_changed",
+        "title": { "en": "Number of detected targets changed" },
+        "hint": { "en": "Fires when the number of detected targets changes." },
+        "args": [
+          { "type": "device", "name": "device", "filter": "driver_id=s1-pro" }
+        ],
+        "tokens": [
+          {
+            "name": "count",
+            "type": "number",
+            "title": { "en": "Target count" }
+          }
+        ]
+      }
+    ],
+    "conditions": [
+      {
+        "id": "target_count_condition",
+        "title": { "en": "Number of targets !{{is|is not}}" },
+        "titleFormatted": { "en": "Number of targets !{{is|is not}} [[operator]] [[count]]" },
+        "hint": { "en": "Check current number of detected targets." },
+        "args": [
+          { "type": "device", "name": "device", "filter": "driver_id=s1-pro" },
+          {
+            "type": "dropdown",
+            "name": "operator",
+            "title": { "en": "Comparison" },
+            "values": [
+              { "id": "lt", "label": { "en": "less than" } },
+              { "id": "lte", "label": { "en": "less than or equal to" } },
+              { "id": "eq", "label": { "en": "equal to" } },
+              { "id": "gte", "label": { "en": "greater than or equal to" } },
+              { "id": "gt", "label": { "en": "greater than" } }
+            ]
+          },
+          {
+            "type": "number",
+            "name": "count",
+            "title": { "en": "Number of targets" },
+            "min": 0,
+            "max": 3
+          }
+        ]
+      }
+    ],
     "actions": [
       {
         "id": "install_firmware_update",

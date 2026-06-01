@@ -52,12 +52,28 @@ class S1ProDevice extends Homey.Device {
     this.log('S1 Pro device init', this.getName());
 
     this._presenceState = null;
+    this._targetCount = null;
     this._keyToObjectId = new Map();
     this._updateEntity = null;
     this._ledEntity = null;
     this._reconnectAttempts = 0;
     this._reconnectTimer = null;
     this._destroyed = false;
+
+    this._targetCountTrigger = this.homey.flow.getDeviceTriggerCard('target_count_changed');
+    this._targetCountCondition = this.homey.flow.getConditionCard('target_count_condition');
+
+    this._targetCountCondition.registerRunListener(({ device, operator, count }) => {
+      const current = device._targetCount || 0;
+      switch (operator) {
+        case 'lt':  return current < count;
+        case 'lte': return current <= count;
+        case 'eq':  return current === count;
+        case 'gte': return current >= count;
+        case 'gt':  return current > count;
+        default:    return false;
+      }
+    });
 
     const caps = [
       'alarm_motion',
@@ -241,6 +257,13 @@ class S1ProDevice extends Homey.Device {
       this.setCapabilityValue(cap, value).catch((e) =>
         this.error(`setCapabilityValue ${cap}`, e && e.message ? e.message : e),
       );
+
+      if (objectId === 'all_targets_count' && value !== this._targetCount) {
+        this._targetCount = value;
+        this._targetCountTrigger.trigger(this, { count: value }).catch((e) =>
+          this.error('trigger target_count_changed', e && e.message ? e.message : e),
+        );
+      }
     }
   }
 
