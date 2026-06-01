@@ -52,9 +52,45 @@ class S1ProDriver extends Homey.Driver {
   }
 
   onRepair(session, device) {
-    session.setHandler('manual_add', async ({ host, port, password }) => {
+    // Pre-fill current settings into the repair view
+    session.setHandler('getSettings', async () => ({
+      host: device.getSetting('host') || '',
+      port: device.getSetting('port') || 6053,
+    }));
+
+    session.setHandler('repair', async ({ host, port, password }) => {
+      if (!host) throw new Error('Host required');
       const p = Number(port) || 6053;
-      await device.setSettings({ host, port: p, password: password || '' });
+      const pw = password || '';
+
+      // Test connection before saving
+      const { Client } = require('../../lib/esphome-client');
+      const client = new Client({
+        host, port: p, password: pw,
+        clientInfo: 'homey-s1pro-repair',
+        reconnect: false,
+        initializeListEntities: false,
+        initializeSubscribeStates: false,
+      });
+
+      await new Promise((resolve, reject) => {
+        const timeout = setTimeout(() => {
+          client.disconnect().catch(() => {});
+          reject(new Error(`Cannot connect to ${host}:${p}`));
+        }, 8000);
+        client.on('connected', () => {
+          clearTimeout(timeout);
+          client.disconnect().catch(() => {});
+          resolve();
+        });
+        client.on('error', (err) => {
+          clearTimeout(timeout);
+          reject(new Error(err && err.message ? err.message : String(err)));
+        });
+        client.connect().catch(reject);
+      });
+
+      await device.setSettings({ host, port: p, password: pw });
       await device.reconnect();
       return true;
     });

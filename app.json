@@ -53,6 +53,9 @@
         { "id": "manual", "navigation": { "next": "add_devices" } },
         { "id": "add_devices", "template": "add_devices" }
       ],
+      "repair": [
+        { "id": "repair" }
+      ],
       "settings": [
         {
           "id": "host",
