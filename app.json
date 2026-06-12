@@ -1,6 +1,6 @@
 {
   "id": "com.sensyone.s1pro",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "platforms": ["local"],
@@ -231,6 +231,12 @@
         ]
       }
     ]
+  },
+  "api": {
+    "getDevices": {
+      "method": "GET",
+      "path": "/devices"
+    }
   },
   "discovery": {
     "esphome-s1pro": {

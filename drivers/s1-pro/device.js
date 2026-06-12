@@ -224,6 +224,9 @@ class S1ProDevice extends Homey.Device {
     });
 
     this._client = client;
+    if (client.connection && typeof client.connection.setMaxListeners === 'function') {
+      client.connection.setMaxListeners(150);
+    }
 
     client.on('connected', () => {
       this.log('Native API connected');
