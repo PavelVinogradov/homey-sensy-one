@@ -24,3 +24,13 @@ Setup:
    or enter its IP address manually.
 3. Sensor values and controls appear as device capabilities, ready for use
    in Homey flows.
+
+Firmware updates:
+Homey's built-in OTA update infrastructure only covers Zigbee/Z-Wave
+devices and does not apply to LAN/ESPHome devices like the S1 Pro.
+To update the sensor's firmware:
+1. Create a flow with a manual trigger (e.g. a button card).
+2. Add the "Check for firmware update" action to see if a new version
+   is available (shown in device settings).
+3. Add the "Install firmware update" action and run the flow to start
+   the OTA update on the sensor itself.
