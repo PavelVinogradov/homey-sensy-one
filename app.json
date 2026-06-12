@@ -1,25 +1,36 @@
 {
-  "id": "com.sensyone.s1pro",
-  "version": "0.5.1",
+  "id": "net.nixdev.s1pro",
+  "version": "0.5.2",
   "compatibility": ">=5.0.0",
   "sdk": 3,
-  "platforms": ["local"],
-  "name": { "en": "Sensy One" },
+  "platforms": [
+    "local"
+  ],
+  "name": {
+    "en": "Sensy One"
+  },
   "description": {
     "en": "Sensy-One S1 Pro Multi Sense presence and environmental sensor (ESPHome)."
   },
-  "category": ["climate"],
+  "category": [
+    "climate"
+  ],
   "brandColor": "#5cd6c0",
   "permissions": [],
   "images": {
     "small": "/assets/images/small.png",
     "large": "/assets/images/large.png"
   },
-  "author": { "name": "void", "email": "void@nixdev.net" },
+  "author": {
+    "name": "void",
+    "email": "void@nixdev.net"
+  },
   "drivers": [
     {
       "id": "s1-pro",
-      "name": { "en": "S1 Pro Multi Sense" },
+      "name": {
+        "en": "S1 Pro Multi Sense"
+      },
       "class": "sensor",
       "capabilities": [
         "alarm_motion",
@@ -36,55 +47,99 @@
         "light_mode"
       ],
       "capabilitiesOptions": {
-        "onoff": { "title": { "en": "LED" } },
-        "dim": { "title": { "en": "LED Brightness" } },
-        "light_hue": { "title": { "en": "LED Color" } }
+        "onoff": {
+          "title": {
+            "en": "LED"
+          }
+        },
+        "dim": {
+          "title": {
+            "en": "LED Brightness"
+          }
+        },
+        "light_hue": {
+          "title": {
+            "en": "LED Color"
+          }
+        }
       },
-      "platforms": ["local"],
-      "connectivity": ["lan"],
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [
+        "lan"
+      ],
       "discovery": "esphome-s1pro",
       "images": {
         "small": "/drivers/s1-pro/assets/images/small.png",
         "large": "/drivers/s1-pro/assets/images/large.png"
       },
       "pair": [
-        { "id": "start" },
-        { "id": "list_devices", "template": "list_devices", "navigation": { "next": "add_devices" } },
-        { "id": "manual", "navigation": { "next": "add_devices" } },
-        { "id": "add_devices", "template": "add_devices" }
+        {
+          "id": "start"
+        },
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "manual",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
       ],
       "repair": [
-        { "id": "repair" }
+        {
+          "id": "repair"
+        }
       ],
       "settings": [
         {
           "id": "host",
           "type": "text",
-          "label": { "en": "IP address / hostname" },
+          "label": {
+            "en": "IP address / hostname"
+          },
           "value": ""
         },
         {
           "id": "port",
           "type": "number",
-          "label": { "en": "Native API port" },
+          "label": {
+            "en": "Native API port"
+          },
           "value": 6053
         },
         {
           "id": "password",
           "type": "password",
-          "label": { "en": "API password (optional)" },
+          "label": {
+            "en": "API password (optional)"
+          },
           "value": ""
         },
         {
           "id": "firmware_current",
           "type": "label",
-          "label": { "en": "Current firmware version" },
+          "label": {
+            "en": "Current firmware version"
+          },
           "value": ""
         },
         {
           "id": "firmware_latest",
           "type": "label",
-          "label": { "en": "Latest firmware version" },
+          "label": {
+            "en": "Latest firmware version"
+          },
           "value": ""
         }
       ]
@@ -93,8 +148,12 @@
   "capabilities": {
     "measure_co2_equivalent": {
       "type": "number",
-      "title": { "en": "CO₂ Equivalent (estimated)" },
-      "units": { "en": "ppm" },
+      "title": {
+        "en": "CO₂ Equivalent (estimated)"
+      },
+      "units": {
+        "en": "ppm"
+      },
       "decimals": 0,
       "min": 0,
       "getable": true,
@@ -105,8 +164,12 @@
     },
     "measure_target_count": {
       "type": "number",
-      "title": { "en": "Detected targets" },
-      "units": { "en": "targets" },
+      "title": {
+        "en": "Detected targets"
+      },
+      "units": {
+        "en": "targets"
+      },
       "icon": "assets/target_count.svg",
       "min": 0,
       "max": 3,
@@ -122,30 +185,52 @@
     "triggers": [
       {
         "id": "target_count_changed",
-        "title": { "en": "Number of detected targets changed" },
-        "hint": { "en": "Fires when the number of detected targets changes." },
+        "title": {
+          "en": "Number of detected targets changed"
+        },
+        "hint": {
+          "en": "Fires when the number of detected targets changes."
+        },
         "args": [
-          { "type": "device", "name": "device", "filter": "driver_id=s1-pro" }
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=s1-pro"
+          }
         ],
         "tokens": [
           {
             "name": "count",
             "type": "number",
-            "title": { "en": "Target count" }
+            "title": {
+              "en": "Target count"
+            }
           }
         ]
       },
       {
         "id": "target_count_became",
-        "title": { "en": "Number of detected targets became" },
-        "titleFormatted": { "en": "Number of detected targets became [[count]]" },
-        "hint": { "en": "Fires when the number of detected targets changes to a specific value." },
+        "title": {
+          "en": "Number of detected targets became"
+        },
+        "titleFormatted": {
+          "en": "Number of detected targets became [[count]]"
+        },
+        "hint": {
+          "en": "Fires when the number of detected targets changes to a specific value."
+        },
         "args": [
-          { "type": "device", "name": "device", "filter": "driver_id=s1-pro" },
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=s1-pro"
+          },
           {
             "type": "number",
             "name": "count",
-            "title": { "en": "Number of targets" },
+            "title": {
+              "en": "Number of targets"
+            },
             "min": 0,
             "max": 3
           }
@@ -155,27 +240,66 @@
     "conditions": [
       {
         "id": "target_count_condition",
-        "title": { "en": "Number of targets !{{is|is not}}" },
-        "titleFormatted": { "en": "Number of targets !{{is|is not}} [[operator]] [[count]]" },
-        "hint": { "en": "Check current number of detected targets." },
+        "title": {
+          "en": "Number of targets !{{is|is not}}"
+        },
+        "titleFormatted": {
+          "en": "Number of targets !{{is|is not}} [[operator]] [[count]]"
+        },
+        "hint": {
+          "en": "Check current number of detected targets."
+        },
         "args": [
-          { "type": "device", "name": "device", "filter": "driver_id=s1-pro" },
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=s1-pro"
+          },
           {
             "type": "dropdown",
             "name": "operator",
-            "title": { "en": "Comparison" },
+            "title": {
+              "en": "Comparison"
+            },
             "values": [
-              { "id": "lt", "label": { "en": "less than" } },
-              { "id": "lte", "label": { "en": "less than or equal to" } },
-              { "id": "eq", "label": { "en": "equal to" } },
-              { "id": "gte", "label": { "en": "greater than or equal to" } },
-              { "id": "gt", "label": { "en": "greater than" } }
+              {
+                "id": "lt",
+                "label": {
+                  "en": "less than"
+                }
+              },
+              {
+                "id": "lte",
+                "label": {
+                  "en": "less than or equal to"
+                }
+              },
+              {
+                "id": "eq",
+                "label": {
+                  "en": "equal to"
+                }
+              },
+              {
+                "id": "gte",
+                "label": {
+                  "en": "greater than or equal to"
+                }
+              },
+              {
+                "id": "gt",
+                "label": {
+                  "en": "greater than"
+                }
+              }
             ]
           },
           {
             "type": "number",
             "name": "count",
-            "title": { "en": "Number of targets" },
+            "title": {
+              "en": "Number of targets"
+            },
             "min": 0,
             "max": 3
           }
@@ -185,49 +309,120 @@
     "actions": [
       {
         "id": "play_sound_signal",
-        "title": { "en": "Play sound signal" },
-        "titleFormatted": { "en": "Play sound signal [[signal]]" },
-        "hint": { "en": "Play a predefined buzzer sound pattern on the S1 Pro." },
+        "title": {
+          "en": "Play sound signal"
+        },
+        "titleFormatted": {
+          "en": "Play sound signal [[signal]]"
+        },
+        "hint": {
+          "en": "Play a predefined buzzer sound pattern on the S1 Pro."
+        },
         "args": [
-          { "type": "device", "name": "device", "filter": "driver_id=s1-pro" },
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=s1-pro"
+          },
           {
             "type": "dropdown",
             "name": "signal",
-            "title": { "en": "Signal" },
+            "title": {
+              "en": "Signal"
+            },
             "values": [
-              { "id": "short_beep",   "label": { "en": "Short beep" } },
-              { "id": "double_beep",  "label": { "en": "Double beep" } },
-              { "id": "triple_beep",  "label": { "en": "Triple beep" } },
-              { "id": "long_beep",    "label": { "en": "Long beep" } },
-              { "id": "alert",        "label": { "en": "Alert (rapid)" } },
-              { "id": "success",      "label": { "en": "Success (rising)" } },
-              { "id": "warning",      "label": { "en": "Warning (descending)" } }
+              {
+                "id": "short_beep",
+                "label": {
+                  "en": "Short beep"
+                }
+              },
+              {
+                "id": "double_beep",
+                "label": {
+                  "en": "Double beep"
+                }
+              },
+              {
+                "id": "triple_beep",
+                "label": {
+                  "en": "Triple beep"
+                }
+              },
+              {
+                "id": "long_beep",
+                "label": {
+                  "en": "Long beep"
+                }
+              },
+              {
+                "id": "alert",
+                "label": {
+                  "en": "Alert (rapid)"
+                }
+              },
+              {
+                "id": "success",
+                "label": {
+                  "en": "Success (rising)"
+                }
+              },
+              {
+                "id": "warning",
+                "label": {
+                  "en": "Warning (descending)"
+                }
+              }
             ]
           }
         ]
       },
       {
         "id": "led_turn_off",
-        "title": { "en": "Turn off LED" },
-        "hint": { "en": "Turns off the WS2812B LED on the S1 Pro." },
+        "title": {
+          "en": "Turn off LED"
+        },
+        "hint": {
+          "en": "Turns off the WS2812B LED on the S1 Pro."
+        },
         "args": [
-          { "type": "device", "name": "device", "filter": "driver_id=s1-pro" }
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=s1-pro"
+          }
         ]
       },
       {
         "id": "install_firmware_update",
-        "title": { "en": "Install firmware update" },
-        "hint": { "en": "Triggers OTA firmware install on the S1 Pro sensor." },
+        "title": {
+          "en": "Install firmware update"
+        },
+        "hint": {
+          "en": "Triggers OTA firmware install on the S1 Pro sensor."
+        },
         "args": [
-          { "type": "device", "name": "device", "filter": "driver_id=s1-pro" }
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=s1-pro"
+          }
         ]
       },
       {
         "id": "check_firmware_update",
-        "title": { "en": "Check for firmware update" },
-        "hint": { "en": "Asks the S1 Pro to check for a new firmware version." },
+        "title": {
+          "en": "Check for firmware update"
+        },
+        "hint": {
+          "en": "Asks the S1 Pro to check for a new firmware version."
+        },
         "args": [
-          { "type": "device", "name": "device", "filter": "driver_id=s1-pro" }
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=s1-pro"
+          }
         ]
       }
     ]
@@ -241,13 +436,19 @@
   "discovery": {
     "esphome-s1pro": {
       "type": "mdns-sd",
-      "mdns-sd": { "name": "esphomelib", "protocol": "tcp" },
+      "mdns-sd": {
+        "name": "esphomelib",
+        "protocol": "tcp"
+      },
       "id": "{{txt.mac}}",
       "conditions": [
         [
           {
             "field": "txt.project_name",
-            "match": { "type": "string", "value": "Sensy-One.S1 Pro Multi Sense" }
+            "match": {
+              "type": "string",
+              "value": "Sensy-One.S1 Pro Multi Sense"
+            }
           }
         ]
       ]

@@ -71,7 +71,7 @@ Zone configuration, buzzer/LED control, OTA firmware updates, BLE proxy, SCD40 a
 ## Architecture
 
 ```
-com.sensyone.s1pro/
+net.nixdev.s1pro/
 ├── app.json              SDK v3 manifest, discovery block, driver capabilities
 ├── app.js                Homey.App (minimal)
 ├── drivers/s1-pro/
