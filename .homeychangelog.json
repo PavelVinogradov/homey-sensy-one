@@ -1,5 +1,8 @@
 {
   "0.5.2": {
     "en": "Fix application repair screen"
+  },
+  "0.5.3": {
+    "en": "Implement device repair screen"
   }
 }
