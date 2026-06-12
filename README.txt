@@ -3,6 +3,10 @@ Sensy One
 Adds support for the Sensy-One S1 Pro Multi Sense (ESPHome-based mmWave
 presence and environmental sensor) to Homey.
 
+This is an unofficial, community-made port of the native Home Assistant
+integration/firmware from https://github.com/sensy-one/S1-Pro-Multi-Sense
+Not affiliated with or endorsed by Sensy-One.
+
 Features:
 - Presence detection (mmWave radar)
 - Multi-target count (0-3 people) with flow triggers/conditions
