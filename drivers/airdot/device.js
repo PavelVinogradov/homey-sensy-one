@@ -99,10 +99,8 @@ class AirDotDevice extends Homey.Device {
     }
 
     client.connection.on('message.ListEntitiesServicesResponse', (svc) => {
-      const name = svc.getName();
-      const key = svc.getKey();
-      this._services[name] = key;
-      this.log(`Service discovered: ${name} key=${key}`);
+      this._services[svc.name] = svc.key;
+      this.log(`Service discovered: ${svc.name} key=${svc.key}`);
     });
 
     client.on('deviceInfo', (info) => {
