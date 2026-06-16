@@ -631,6 +631,10 @@
     "getDevices": {
       "method": "GET",
       "path": "/devices"
+    },
+    "setDeviceHost": {
+      "method": "POST",
+      "path": "/device/:id/host"
     }
   },
   "discovery": {

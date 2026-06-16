@@ -4,17 +4,17 @@ const Homey = require('homey');
 const { Client } = require('../../lib/esphome-client');
 
 const ENV_MAP = {
-  ha_air_temperature: 'measure_temperature',
-  ha_air_humidity:    'measure_humidity',
-  ha_ambient_light:   'measure_luminance',
-  ha_co2:             'measure_co2',
-  ha_pressure:        'measure_pressure',
-  ha_pm1:             'measure_pm1',
-  ha_pm25:            'measure_pm25',
-  ha_pm4:             'measure_pm4',
-  ha_pm10:            'measure_pm10',
-  ha_voc:             'measure_voc',
-  ha_nox_index:       'measure_nox',
+  temperature: 'measure_temperature',
+  humidity:    'measure_humidity',
+  light:       'measure_luminance',
+  co2:         'measure_co2',
+  pressure:    'measure_pressure',
+  pm1:         'measure_pm1',
+  pm2_5:       'measure_pm25',
+  pm4:         'measure_pm4',
+  pm10:        'measure_pm10',
+  voc_index:   'measure_voc',
+  nox_index:   'measure_nox',
 };
 
 const CAPABILITIES = Object.values(ENV_MAP);
