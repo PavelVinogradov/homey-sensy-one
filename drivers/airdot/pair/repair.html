@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><title>Repair AirDot</title></head>
+<body>
+  <header class="homey-header">
+    <h1 class="homey-title">Repair AirDot</h1>
+    <p class="homey-subtitle">Update connection details if sensor got a new IP address.</p>
+  </header>
+
+  <fieldset class="homey-form-fieldset">
+    <div class="homey-form-group">
+      <label class="homey-form-label" for="host">IP address or hostname</label>
+      <input class="homey-form-input" id="host" type="text" placeholder="192.168.1.42" />
+    </div>
+    <div class="homey-form-group">
+      <label class="homey-form-label" for="port">Native API port</label>
+      <input class="homey-form-input" id="port" type="number" value="6053" />
+    </div>
+    <div class="homey-form-group">
+      <label class="homey-form-label" for="password">API password (optional)</label>
+      <input class="homey-form-input" id="password" type="password" />
+    </div>
+  </fieldset>
+
+  <p id="status" style="color:#888;font-size:13px;margin:8px 0;min-height:18px;"></p>
+
+  <button class="homey-button-primary-full" id="submit">Test &amp; Save</button>
+
+  <script>
+    // Pre-fill current settings from device
+    Homey.emit('getSettings', {}, (err, settings) => {
+      if (!err && settings) {
+        if (settings.host) document.getElementById('host').value = settings.host;
+        if (settings.port) document.getElementById('port').value = settings.port;
+      }
+    });
+
+    document.getElementById('submit').addEventListener('click', () => {
+      const host = document.getElementById('host').value.trim();
+      const port = Number(document.getElementById('port').value) || 6053;
+      const password = document.getElementById('password').value || '';
+      const status = document.getElementById('status');
+      const btn = document.getElementById('submit');
+
+      if (!host) return Homey.alert('Host required');
+
+      btn.disabled = true;
+      status.style.color = '#888';
+      status.textContent = 'Testing connection…';
+
+      Homey.emit('repair', { host, port, password }, (err) => {
+        if (err) {
+          btn.disabled = false;
+          status.style.color = '#e74c3c';
+          status.textContent = err.message || String(err);
+        } else {
+          status.textContent = 'Connected. Saved.';
+          Homey.done();
+        }
+      });
+    });
+  </script>
+</body>
+</html>

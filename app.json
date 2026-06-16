@@ -1,6 +1,6 @@
 {
   "id": "net.nixdev.s1pro",
-  "version": "0.5.3",
+  "version": "0.6.0",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "platforms": [
@@ -10,7 +10,7 @@
     "en": "Sensy One"
   },
   "description": {
-    "en": "Sensy-One S1 Pro Multi Sense presence and environmental sensor (ESPHome)."
+    "en": "Sensy-One sensors for Homey: S1 Pro Multi Sense (mmWave presence) and AirDot (air quality)."
   },
   "category": [
     "climate"
@@ -143,6 +143,106 @@
           "value": ""
         }
       ]
+    },
+    {
+      "id": "airdot",
+      "name": {
+        "en": "AirDot"
+      },
+      "class": "sensor",
+      "capabilities": [
+        "measure_temperature",
+        "measure_humidity",
+        "measure_luminance",
+        "measure_co2",
+        "measure_pressure",
+        "measure_pm1",
+        "measure_pm25",
+        "measure_pm4",
+        "measure_pm10",
+        "measure_voc",
+        "measure_nox"
+      ],
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [
+        "lan"
+      ],
+      "discovery": "esphome-airdot",
+      "images": {
+        "small": "/drivers/airdot/assets/images/small.png",
+        "large": "/drivers/airdot/assets/images/large.png"
+      },
+      "pair": [
+        {
+          "id": "start"
+        },
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "manual",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "repair": [
+        {
+          "id": "repair"
+        }
+      ],
+      "settings": [
+        {
+          "id": "host",
+          "type": "text",
+          "label": {
+            "en": "IP address / hostname"
+          },
+          "value": ""
+        },
+        {
+          "id": "port",
+          "type": "number",
+          "label": {
+            "en": "Native API port"
+          },
+          "value": 6053
+        },
+        {
+          "id": "password",
+          "type": "password",
+          "label": {
+            "en": "API password (optional)"
+          },
+          "value": ""
+        },
+        {
+          "id": "firmware_current",
+          "type": "label",
+          "label": {
+            "en": "Current firmware version"
+          },
+          "value": ""
+        },
+        {
+          "id": "firmware_latest",
+          "type": "label",
+          "label": {
+            "en": "Latest firmware version"
+          },
+          "value": ""
+        }
+      ]
     }
   ],
   "capabilities": {
@@ -175,6 +275,74 @@
       "max": 3,
       "step": 1,
       "decimals": 0,
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "uiQuickAction": false
+    },
+    "measure_pm1": {
+      "type": "number",
+      "title": { "en": "PM1" },
+      "units": { "en": "µg/m³" },
+      "decimals": 1,
+      "min": 0,
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "uiQuickAction": false
+    },
+    "measure_pm25": {
+      "type": "number",
+      "title": { "en": "PM2.5" },
+      "units": { "en": "µg/m³" },
+      "decimals": 1,
+      "min": 0,
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "uiQuickAction": false
+    },
+    "measure_pm4": {
+      "type": "number",
+      "title": { "en": "PM4" },
+      "units": { "en": "µg/m³" },
+      "decimals": 1,
+      "min": 0,
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "uiQuickAction": false
+    },
+    "measure_pm10": {
+      "type": "number",
+      "title": { "en": "PM10" },
+      "units": { "en": "µg/m³" },
+      "decimals": 1,
+      "min": 0,
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "uiQuickAction": false
+    },
+    "measure_voc": {
+      "type": "number",
+      "title": { "en": "VOC Index" },
+      "units": { "en": "index" },
+      "decimals": 0,
+      "min": 0,
+      "max": 500,
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "uiQuickAction": false
+    },
+    "measure_nox": {
+      "type": "number",
+      "title": { "en": "NOx Index" },
+      "units": { "en": "index" },
+      "decimals": 0,
+      "min": 1,
+      "max": 500,
       "getable": true,
       "setable": false,
       "uiComponent": "sensor",
@@ -424,6 +592,38 @@
             "filter": "driver_id=s1-pro"
           }
         ]
+      },
+      {
+        "id": "airdot_install_firmware_update",
+        "title": {
+          "en": "Install firmware update"
+        },
+        "hint": {
+          "en": "Triggers OTA firmware install on the AirDot sensor."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=airdot"
+          }
+        ]
+      },
+      {
+        "id": "airdot_check_firmware_update",
+        "title": {
+          "en": "Check for firmware update"
+        },
+        "hint": {
+          "en": "Asks the AirDot to check for a new firmware version."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=airdot"
+          }
+        ]
       }
     ]
   },
@@ -434,6 +634,25 @@
     }
   },
   "discovery": {
+    "esphome-airdot": {
+      "type": "mdns-sd",
+      "mdns-sd": {
+        "name": "esphomelib",
+        "protocol": "tcp"
+      },
+      "id": "{{txt.mac}}",
+      "conditions": [
+        [
+          {
+            "field": "txt.project_name",
+            "match": {
+              "type": "string",
+              "value": "sensy-one.AirDot"
+            }
+          }
+        ]
+      ]
+    },
     "esphome-s1pro": {
       "type": "mdns-sd",
       "mdns-sd": {
