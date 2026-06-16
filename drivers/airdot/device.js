@@ -68,6 +68,7 @@ class AirDotDevice extends Homey.Device {
       host, port, password,
       clientInfo: 'homey-airdot',
       reconnect: false,
+      initializeDeviceInfo: true,
       initializeListEntities: true,
       initializeSubscribeStates: true,
     });
@@ -76,6 +77,12 @@ class AirDotDevice extends Homey.Device {
     if (client.connection && typeof client.connection.setMaxListeners === 'function') {
       client.connection.setMaxListeners(150);
     }
+
+    client.on('deviceInfo', (info) => {
+      const version = info.projectVersion || info.esphomeVersion || '';
+      this.log(`Firmware: ${version}`);
+      this.setSettings({ firmware_current: version, firmware_latest: version }).catch(() => {});
+    });
 
     client.on('connected', () => {
       this.log('Native API connected');
