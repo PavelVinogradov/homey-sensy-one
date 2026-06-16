@@ -1,6 +1,6 @@
 {
   "id": "net.nixdev.s1pro",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "platforms": [
@@ -141,6 +141,17 @@
             "en": "Latest firmware version"
           },
           "value": ""
+        },
+        {
+          "id": "radar_single_target",
+          "type": "checkbox",
+          "label": {
+            "en": "Single target mode"
+          },
+          "hint": {
+            "en": "When enabled, the radar tracks only 1 target. Disable to detect up to 3 targets simultaneously."
+          },
+          "value": false
         }
       ]
     },

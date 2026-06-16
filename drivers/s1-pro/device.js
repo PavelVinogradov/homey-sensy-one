@@ -75,6 +75,7 @@ class S1ProDevice extends Homey.Device {
     this._buzzerEntity = null;
     this._buzzerPitchEntity = null;
     this._buzzerVolumeEntity = null;
+    this._singleTargetEntity = null;
     this._reconnectAttempts = 0;
     this._reconnectTimer = null;
     this._destroyed = false;
@@ -219,6 +220,7 @@ class S1ProDevice extends Homey.Device {
       password,
       clientInfo: 'homey-s1pro',
       reconnect: false,
+      initializeDeviceInfo: true,
       initializeListEntities: true,
       initializeSubscribeStates: true,
     });
@@ -227,6 +229,11 @@ class S1ProDevice extends Homey.Device {
     if (client.connection && typeof client.connection.setMaxListeners === 'function') {
       client.connection.setMaxListeners(150);
     }
+
+    client.on('deviceInfo', (info) => {
+      const version = info.projectVersion || info.esphomeVersion || '';
+      if (version) this.setSettings({ firmware_current: version }).catch(() => {});
+    });
 
     client.on('connected', () => {
       this.log('Native API connected');
@@ -277,6 +284,15 @@ class S1ProDevice extends Homey.Device {
 
     if (entity.type === 'Switch' && objectId === BUZZER_ENTITY) {
       this._buzzerEntity = entity;
+      return;
+    }
+
+    if (entity.type === 'Switch' && objectId === 'radar___single_target') {
+      this._singleTargetEntity = entity;
+      entity.on('state', (s) => {
+        if (s == null) return;
+        this.setSettings({ radar_single_target: s.state === true }).catch(() => {});
+      });
       return;
     }
 
@@ -380,6 +396,13 @@ class S1ProDevice extends Homey.Device {
   }
 
   async onSettings({ newSettings, changedKeys }) {
+    if (changedKeys.includes('radar_single_target')) {
+      if (this._singleTargetEntity) {
+        this._singleTargetEntity.command({ state: newSettings.radar_single_target });
+      } else {
+        throw new Error('Radar not connected — connect device first');
+      }
+    }
     if (changedKeys.some((k) => ['host', 'port', 'password'].includes(k))) {
       this.log('Connection settings changed, reconnecting');
       setImmediate(() => this.reconnect().catch((e) => this.error('reconnect on settings', e)));
