@@ -344,12 +344,15 @@ class S1ProDevice extends Homey.Device {
   }
 
   _onUpdateState(state) {
-    if (!state) return;
+    if (!state || state.missingState) return;
     const current = state.currentVersion || '';
     const latest = state.latestVersion || '';
     const hasUpdate = latest && current && latest !== current && !state.inProgress;
     this.log(`Firmware: current=${current} latest=${latest} updateAvailable=${hasUpdate}`);
-    this.setSettings({ firmware_current: current, firmware_latest: latest }).catch(() => {});
+    const update = {};
+    if (current) update.firmware_current = current;
+    if (latest) update.firmware_latest = latest;
+    if (Object.keys(update).length) this.setSettings(update).catch(() => {});
   }
 
   // ── Buzzer ────────────────────────────────────────────────────────────────
