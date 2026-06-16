@@ -1,6 +1,6 @@
 {
   "id": "net.nixdev.s1pro",
-  "version": "0.7.5",
+  "version": "0.7.6",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "platforms": [
@@ -127,20 +127,22 @@
           "value": ""
         },
         {
-          "id": "firmware_current",
-          "type": "label",
-          "label": {
-            "en": "Current firmware version"
-          },
-          "value": ""
-        },
-        {
-          "id": "firmware_latest",
-          "type": "label",
-          "label": {
-            "en": "Latest firmware version"
-          },
-          "value": ""
+          "type": "group",
+          "label": { "en": "Device firmware" },
+          "children": [
+            {
+              "id": "firmware_current",
+              "type": "label",
+              "label": { "en": "Current version" },
+              "value": ""
+            },
+            {
+              "id": "firmware_latest",
+              "type": "label",
+              "label": { "en": "Latest version" },
+              "value": ""
+            }
+          ]
         },
         {
           "id": "radar_single_target",
@@ -281,20 +283,22 @@
           "value": ""
         },
         {
-          "id": "firmware_current",
-          "type": "label",
-          "label": {
-            "en": "Current firmware version"
-          },
-          "value": ""
-        },
-        {
-          "id": "firmware_latest",
-          "type": "label",
-          "label": {
-            "en": "Latest firmware version"
-          },
-          "value": ""
+          "type": "group",
+          "label": { "en": "Device firmware" },
+          "children": [
+            {
+              "id": "firmware_current",
+              "type": "label",
+              "label": { "en": "Current version" },
+              "value": ""
+            },
+            {
+              "id": "firmware_latest",
+              "type": "label",
+              "label": { "en": "Latest version" },
+              "value": ""
+            }
+          ]
         }
       ]
     }
