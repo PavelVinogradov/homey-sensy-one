@@ -1,6 +1,6 @@
 {
   "id": "net.nixdev.s1pro",
-  "version": "0.6.3",
+  "version": "0.7.0",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "platforms": [
@@ -282,8 +282,12 @@
     },
     "measure_pm1": {
       "type": "number",
-      "title": { "en": "PM1" },
-      "units": { "en": "µg/m³" },
+      "title": {
+        "en": "PM1"
+      },
+      "units": {
+        "en": "µg/m³"
+      },
       "decimals": 1,
       "min": 0,
       "getable": true,
@@ -293,8 +297,12 @@
     },
     "measure_pm25": {
       "type": "number",
-      "title": { "en": "PM2.5" },
-      "units": { "en": "µg/m³" },
+      "title": {
+        "en": "PM2.5"
+      },
+      "units": {
+        "en": "µg/m³"
+      },
       "decimals": 1,
       "min": 0,
       "getable": true,
@@ -304,8 +312,12 @@
     },
     "measure_pm4": {
       "type": "number",
-      "title": { "en": "PM4" },
-      "units": { "en": "µg/m³" },
+      "title": {
+        "en": "PM4"
+      },
+      "units": {
+        "en": "µg/m³"
+      },
       "decimals": 1,
       "min": 0,
       "getable": true,
@@ -315,8 +327,12 @@
     },
     "measure_pm10": {
       "type": "number",
-      "title": { "en": "PM10" },
-      "units": { "en": "µg/m³" },
+      "title": {
+        "en": "PM10"
+      },
+      "units": {
+        "en": "µg/m³"
+      },
       "decimals": 1,
       "min": 0,
       "getable": true,
@@ -326,8 +342,12 @@
     },
     "measure_voc": {
       "type": "number",
-      "title": { "en": "VOC Index" },
-      "units": { "en": "index" },
+      "title": {
+        "en": "VOC Index"
+      },
+      "units": {
+        "en": "index"
+      },
       "decimals": 0,
       "min": 0,
       "max": 500,
@@ -338,8 +358,12 @@
     },
     "measure_nox": {
       "type": "number",
-      "title": { "en": "NOx Index" },
-      "units": { "en": "index" },
+      "title": {
+        "en": "NOx Index"
+      },
+      "units": {
+        "en": "index"
+      },
       "decimals": 0,
       "min": 1,
       "max": 500,
@@ -613,19 +637,29 @@
           {
             "type": "text",
             "name": "title",
-            "title": { "en": "Title" },
-            "placeholder": { "en": "Alert" }
+            "title": {
+              "en": "Title"
+            },
+            "placeholder": {
+              "en": "Alert"
+            }
           },
           {
             "type": "text",
             "name": "message",
-            "title": { "en": "Message" },
-            "placeholder": { "en": "..." }
+            "title": {
+              "en": "Message"
+            },
+            "placeholder": {
+              "en": "..."
+            }
           },
           {
             "type": "number",
             "name": "duration",
-            "title": { "en": "Duration (seconds, 0 = permanent)" },
+            "title": {
+              "en": "Duration (seconds, 0 = permanent)"
+            },
             "min": 0,
             "max": 3600,
             "step": 1,
@@ -634,7 +668,9 @@
           {
             "type": "checkbox",
             "name": "sound_enabled",
-            "title": { "en": "Play sound" },
+            "title": {
+              "en": "Play sound"
+            },
             "value": false
           }
         ]

@@ -4,5 +4,8 @@
   },
   "0.5.3": {
     "en": "Implement device repair screen"
+  },
+  "0.7.0": {
+    "en": "Add support for AirDot"
   }
 }
