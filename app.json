@@ -10,9 +10,13 @@
     "en": "CommSensyOne"
   },
   "description": {
-    "en": "Sensy-One sensors for Homey: S1 Pro Multi Sense (mmWave presence) and AirDot (air quality)."
+    "en": "Unofficial Homey integration for Sensy-One sensors: S1 Pro Multi Sense (mmWave presence, LED, buzzer) and AirDot (air quality display). Community project, provided AS-IS."
+  },
+  "tags": {
+    "en": ["sensy-one", "mmwave", "presence", "air quality", "esphome", "radar", "co2", "pm2.5"]
   },
   "category": [
+    "security",
     "climate"
   ],
   "brandColor": "#5cd6c0",
@@ -22,8 +26,13 @@
     "large": "/assets/images/large.png"
   },
   "author": {
-    "name": "void",
-    "email": "void@nixdev.net"
+    "name": "Pavel Vinogradov"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/PavelVinogradov/homey-sensy-one",
+  "source": "https://github.com/PavelVinogradov/homey-sensy-one",
+  "bugs": {
+    "url": "https://github.com/PavelVinogradov/homey-sensy-one/issues"
   },
   "drivers": [
     {
