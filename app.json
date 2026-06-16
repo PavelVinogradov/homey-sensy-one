@@ -1,13 +1,13 @@
 {
   "id": "net.nixdev.s1pro",
-  "version": "0.7.8",
+  "version": "0.7.9",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "platforms": [
     "local"
   ],
   "name": {
-    "en": "Sensy One"
+    "en": "CommSensyOne"
   },
   "description": {
     "en": "Sensy-One sensors for Homey: S1 Pro Multi Sense (mmWave presence) and AirDot (air quality)."
