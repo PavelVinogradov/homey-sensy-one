@@ -3,6 +3,9 @@
 const Homey = require('homey');
 const { Client } = require('../../lib/esphome-client');
 
+// ESPHome ServiceArgType enum values
+const SVC_ARG = { BOOL: 0, INT: 1, FLOAT: 2, STRING: 3 };
+
 const ENV_MAP = {
   temperature: 'measure_temperature',
   humidity:    'measure_humidity',
@@ -24,6 +27,7 @@ class AirDotDevice extends Homey.Device {
     this.log('AirDot device init', this.getName());
 
     this._updateEntity = null;
+    this._services = {};
     this._reconnectAttempts = 0;
     this._reconnectTimer = null;
     this._destroyed = false;
@@ -44,6 +48,22 @@ class AirDotDevice extends Homey.Device {
       .registerRunListener(async () => {
         if (!this._updateEntity) throw new Error('Update entity not available');
         this._updateEntity.check();
+      });
+
+    this.homey.flow.getActionCard('airdot_show_alert')
+      .registerRunListener(async ({ title = '', message = '', duration = 10, sound_enabled = false }) => {
+        this._executeService('show_display_alert', [
+          { type: SVC_ARG.STRING, value: String(title).slice(0, 64) },
+          { type: SVC_ARG.STRING, value: String(message).slice(0, 240) },
+          { type: SVC_ARG.INT,    value: Math.max(0, Math.round(Number(duration))) },
+          { type: SVC_ARG.BOOL,   value: Boolean(sound_enabled) },
+          { type: SVC_ARG.INT,    value: sound_enabled ? 1000 : 0 },
+        ]);
+      });
+
+    this.homey.flow.getActionCard('airdot_clear_alert')
+      .registerRunListener(async () => {
+        this._executeService('clear_display_alert', []);
       });
 
     await this._connect();
@@ -77,6 +97,13 @@ class AirDotDevice extends Homey.Device {
     if (client.connection && typeof client.connection.setMaxListeners === 'function') {
       client.connection.setMaxListeners(150);
     }
+
+    client.connection.on('message.ListEntitiesServicesResponse', (svc) => {
+      const name = svc.getName();
+      const key = svc.getKey();
+      this._services[name] = key;
+      this.log(`Service discovered: ${name} key=${key}`);
+    });
 
     client.on('deviceInfo', (info) => {
       const version = info.projectVersion || info.esphomeVersion || '';
@@ -147,6 +174,13 @@ class AirDotDevice extends Homey.Device {
     this.setSettings({ firmware_current: current, firmware_latest: latest }).catch(() => {});
   }
 
+  _executeService(name, args) {
+    const key = this._services[name];
+    if (!key) throw new Error(`Service "${name}" not available`);
+    if (!this._client || !this._client.connection) throw new Error('Not connected');
+    this._client.connection.executeServiceService({ key, args });
+  }
+
   _scheduleReconnect() {
     if (this._destroyed) return;
     if (this._reconnectTimer) return;
@@ -164,6 +198,7 @@ class AirDotDevice extends Homey.Device {
       if (this._client) await this._client.disconnect().catch(() => {});
     } finally {
       this._client = null;
+      this._services = {};
       this._reconnectAttempts = 0;
       await this._connect();
     }

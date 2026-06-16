@@ -1,6 +1,6 @@
 {
   "id": "net.nixdev.s1pro",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "platforms": [
@@ -590,6 +590,68 @@
             "type": "device",
             "name": "device",
             "filter": "driver_id=s1-pro"
+          }
+        ]
+      },
+      {
+        "id": "airdot_show_alert",
+        "title": {
+          "en": "Show alert on display"
+        },
+        "titleFormatted": {
+          "en": "Show [[title]]: [[message]] for [[duration]]s (sound: [[sound_enabled]]) on AirDot display"
+        },
+        "hint": {
+          "en": "Show a custom title and message on the AirDot display for a set duration."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=airdot"
+          },
+          {
+            "type": "text",
+            "name": "title",
+            "title": { "en": "Title" },
+            "placeholder": { "en": "Alert" }
+          },
+          {
+            "type": "text",
+            "name": "message",
+            "title": { "en": "Message" },
+            "placeholder": { "en": "..." }
+          },
+          {
+            "type": "number",
+            "name": "duration",
+            "title": { "en": "Duration (seconds, 0 = permanent)" },
+            "min": 0,
+            "max": 3600,
+            "step": 1,
+            "value": 10
+          },
+          {
+            "type": "checkbox",
+            "name": "sound_enabled",
+            "title": { "en": "Play sound" },
+            "value": false
+          }
+        ]
+      },
+      {
+        "id": "airdot_clear_alert",
+        "title": {
+          "en": "Clear display alert"
+        },
+        "hint": {
+          "en": "Dismiss the current alert overlay on the AirDot display."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=airdot"
           }
         ]
       },
