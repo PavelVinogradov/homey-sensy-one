@@ -272,6 +272,7 @@ class S1ProDevice extends Homey.Device {
       this._updateEntity = entity;
       entity.on('state', (state) => this._onUpdateState(state));
       this.log('Update entity found:', cfg.name);
+      setTimeout(() => { if (this._updateEntity) this._updateEntity.check(); }, 5000);
       return;
     }
 

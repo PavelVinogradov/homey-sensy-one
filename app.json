@@ -1,6 +1,6 @@
 {
   "id": "net.nixdev.s1pro",
-  "version": "0.7.2",
+  "version": "0.7.3",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "platforms": [
