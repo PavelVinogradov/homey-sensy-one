@@ -76,6 +76,9 @@ class S1ProDevice extends Homey.Device {
     this._buzzerPitchEntity = null;
     this._buzzerVolumeEntity = null;
     this._singleTargetEntity = null;
+    this._flipYAxisEntity = null;
+    this._detectionRangeEntity = null;
+    this._presenceDelayEntity = null;
     this._reconnectAttempts = 0;
     this._reconnectTimer = null;
     this._destroyed = false;
@@ -298,6 +301,35 @@ class S1ProDevice extends Homey.Device {
       return;
     }
 
+    if (entity.type === 'Switch' && objectId === 'radar___flip_y_axis') {
+      this._flipYAxisEntity = entity;
+      entity.on('state', (s) => {
+        if (s == null) return;
+        this.setSettings({ radar_flip_y_axis: s.state === true }).catch(() => {});
+      });
+      return;
+    }
+
+    if (entity.type === 'Number' && objectId === 'detection_range') {
+      this._detectionRangeEntity = entity;
+      entity.on('state', (s) => {
+        if (s == null) return;
+        const v = typeof s.state === 'number' ? s.state : parseFloat(s.state);
+        if (!Number.isNaN(v)) this.setSettings({ detection_range: v }).catch(() => {});
+      });
+      return;
+    }
+
+    if (entity.type === 'Number' && objectId === 'any_presence_delay') {
+      this._presenceDelayEntity = entity;
+      entity.on('state', (s) => {
+        if (s == null) return;
+        const v = typeof s.state === 'number' ? s.state : parseFloat(s.state);
+        if (!Number.isNaN(v)) this.setSettings({ any_presence_delay: v }).catch(() => {});
+      });
+      return;
+    }
+
     if (entity.type === 'Number' && objectId === BUZZER_PITCH_ENTITY) {
       this._buzzerPitchEntity = entity;
       return;
@@ -416,6 +448,27 @@ class S1ProDevice extends Homey.Device {
     if (changedKeys.includes('radar_single_target')) {
       if (this._singleTargetEntity) {
         this._singleTargetEntity.command({ state: newSettings.radar_single_target });
+      } else {
+        throw new Error('Radar not connected — connect device first');
+      }
+    }
+    if (changedKeys.includes('radar_flip_y_axis')) {
+      if (this._flipYAxisEntity) {
+        this._flipYAxisEntity.command({ state: newSettings.radar_flip_y_axis });
+      } else {
+        throw new Error('Radar not connected — connect device first');
+      }
+    }
+    if (changedKeys.includes('detection_range')) {
+      if (this._detectionRangeEntity) {
+        this._detectionRangeEntity.command({ state: Number(newSettings.detection_range) });
+      } else {
+        throw new Error('Radar not connected — connect device first');
+      }
+    }
+    if (changedKeys.includes('any_presence_delay')) {
+      if (this._presenceDelayEntity) {
+        this._presenceDelayEntity.command({ state: Number(newSettings.any_presence_delay) });
       } else {
         throw new Error('Radar not connected — connect device first');
       }

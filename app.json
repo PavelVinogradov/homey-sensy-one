@@ -1,6 +1,6 @@
 {
   "id": "net.nixdev.s1pro",
-  "version": "0.7.4",
+  "version": "0.7.5",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "platforms": [
@@ -152,6 +152,49 @@
             "en": "When enabled, the radar tracks only 1 target. Disable to detect up to 3 targets simultaneously."
           },
           "value": false
+        },
+        {
+          "id": "radar_flip_y_axis",
+          "type": "checkbox",
+          "label": {
+            "en": "Flip Y axis"
+          },
+          "hint": {
+            "en": "Enable if sensor is mounted upside-down or facing the opposite direction."
+          },
+          "value": false
+        },
+        {
+          "id": "detection_range",
+          "type": "number",
+          "label": {
+            "en": "Detection range (cm)"
+          },
+          "hint": {
+            "en": "Maximum radar detection distance. 0–1800 cm."
+          },
+          "value": 600,
+          "attr": {
+            "min": 0,
+            "max": 1800,
+            "step": 1
+          }
+        },
+        {
+          "id": "any_presence_delay",
+          "type": "number",
+          "label": {
+            "en": "Presence clear delay (s)"
+          },
+          "hint": {
+            "en": "Seconds to wait before reporting absence after targets disappear. 0–3600 s."
+          },
+          "value": 0,
+          "attr": {
+            "min": 0,
+            "max": 3600,
+            "step": 1
+          }
         }
       ]
     },
