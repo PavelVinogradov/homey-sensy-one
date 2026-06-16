@@ -1,6 +1,6 @@
 {
   "id": "net.nixdev.s1pro",
-  "version": "0.7.6",
+  "version": "0.7.5",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "platforms": [
@@ -103,12 +103,6 @@
       ],
       "settings": [
         {
-          "id": "_group_connection",
-          "type": "label",
-          "label": { "en": "Device connection" },
-          "value": ""
-        },
-        {
           "id": "host",
           "type": "text",
           "label": {
@@ -133,9 +127,19 @@
           "value": ""
         },
         {
-          "id": "_group_radar",
+          "id": "firmware_current",
           "type": "label",
-          "label": { "en": "Radar settings" },
+          "label": {
+            "en": "Current firmware version"
+          },
+          "value": ""
+        },
+        {
+          "id": "firmware_latest",
+          "type": "label",
+          "label": {
+            "en": "Latest firmware version"
+          },
           "value": ""
         },
         {
@@ -191,28 +195,6 @@
             "max": 3600,
             "step": 1
           }
-        },
-        {
-          "id": "_group_firmware",
-          "type": "label",
-          "label": { "en": "Firmware" },
-          "value": ""
-        },
-        {
-          "id": "firmware_current",
-          "type": "label",
-          "label": {
-            "en": "Current version"
-          },
-          "value": ""
-        },
-        {
-          "id": "firmware_latest",
-          "type": "label",
-          "label": {
-            "en": "Latest version"
-          },
-          "value": ""
         }
       ]
     },
@@ -275,12 +257,6 @@
       ],
       "settings": [
         {
-          "id": "_group_connection",
-          "type": "label",
-          "label": { "en": "Device connection" },
-          "value": ""
-        },
-        {
           "id": "host",
           "type": "text",
           "label": {
@@ -305,16 +281,10 @@
           "value": ""
         },
         {
-          "id": "_group_firmware",
-          "type": "label",
-          "label": { "en": "Firmware" },
-          "value": ""
-        },
-        {
           "id": "firmware_current",
           "type": "label",
           "label": {
-            "en": "Current version"
+            "en": "Current firmware version"
           },
           "value": ""
         },
@@ -322,7 +292,7 @@
           "id": "firmware_latest",
           "type": "label",
           "label": {
-            "en": "Latest version"
+            "en": "Latest firmware version"
           },
           "value": ""
         }
