@@ -1,6 +1,6 @@
 {
   "id": "net.nixdev.s1pro",
-  "version": "0.7.6",
+  "version": "0.7.7",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "platforms": [
@@ -103,28 +103,28 @@
       ],
       "settings": [
         {
-          "id": "host",
-          "type": "text",
-          "label": {
-            "en": "IP address / hostname"
-          },
-          "value": ""
-        },
-        {
-          "id": "port",
-          "type": "number",
-          "label": {
-            "en": "Native API port"
-          },
-          "value": 6053
-        },
-        {
-          "id": "password",
-          "type": "password",
-          "label": {
-            "en": "API password (optional)"
-          },
-          "value": ""
+          "type": "group",
+          "label": { "en": "Device connection" },
+          "children": [
+            {
+              "id": "host",
+              "type": "text",
+              "label": { "en": "IP address / hostname" },
+              "value": ""
+            },
+            {
+              "id": "port",
+              "type": "number",
+              "label": { "en": "Native API port" },
+              "value": 6053
+            },
+            {
+              "id": "password",
+              "type": "password",
+              "label": { "en": "API password (optional)" },
+              "value": ""
+            }
+          ]
         },
         {
           "type": "group",
@@ -259,28 +259,28 @@
       ],
       "settings": [
         {
-          "id": "host",
-          "type": "text",
-          "label": {
-            "en": "IP address / hostname"
-          },
-          "value": ""
-        },
-        {
-          "id": "port",
-          "type": "number",
-          "label": {
-            "en": "Native API port"
-          },
-          "value": 6053
-        },
-        {
-          "id": "password",
-          "type": "password",
-          "label": {
-            "en": "API password (optional)"
-          },
-          "value": ""
+          "type": "group",
+          "label": { "en": "Device connection" },
+          "children": [
+            {
+              "id": "host",
+              "type": "text",
+              "label": { "en": "IP address / hostname" },
+              "value": ""
+            },
+            {
+              "id": "port",
+              "type": "number",
+              "label": { "en": "Native API port" },
+              "value": 6053
+            },
+            {
+              "id": "password",
+              "type": "password",
+              "label": { "en": "API password (optional)" },
+              "value": ""
+            }
+          ]
         },
         {
           "type": "group",
