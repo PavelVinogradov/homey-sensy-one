@@ -1,6 +1,6 @@
 {
-  "id": "net.nixdev.s1pro",
-  "version": "0.7.9",
+  "id": "net.nixdev.sensyone",
+  "version": "0.8.0",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "platforms": [

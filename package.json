@@ -1,5 +1,5 @@
 {
-  "name": "net.nixdev.s1pro",
+  "name": "net.nixdev.sensyone",
   "version": "0.6.2",
   "main": "app.js",
   "dependencies": {
