@@ -233,6 +233,7 @@ class S1ProDevice extends Homey.Device {
     client.on('deviceInfo', (info) => {
       const version = info.projectVersion || info.esphomeVersion || '';
       if (version) this.setSettings({ firmware_current: version }).catch(() => {});
+      this._fetchLatestFirmwareVersion().catch(() => {});
     });
 
     client.on('connected', () => {
@@ -376,6 +377,18 @@ class S1ProDevice extends Homey.Device {
   }
 
   // ── Reconnect ─────────────────────────────────────────────────────────────
+
+  async _fetchLatestFirmwareVersion() {
+    const url = 'https://github.com/sensy-one/S1-Pro-Multi-Sense/releases/latest/download/manifest.json';
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    const latest = data.version || '';
+    if (latest) {
+      this.log(`Latest firmware from manifest: ${latest}`);
+      this.setSettings({ firmware_latest: latest }).catch(() => {});
+    }
+  }
 
   _scheduleReconnect() {
     if (this._destroyed) return;
